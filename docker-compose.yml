@@ -6,6 +6,9 @@
           unipile_dsn: ${unipile_dsn}
           unipile_access_token: ${unipile_access_token}
           db_host: db
+          db_user: ${db_user}
+          db_password: ${db_password}
+          db_name: ${db_name}
           port: 8080
         ports:
           - "8080:8080"
@@ -25,11 +28,11 @@
         image: mariadb
         restart: always
         environment:
-          MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-          MARIADB_DATABASE: linkedin_agent_db
+          MARIADB_ROOT_PASSWORD: ${db_password}
+          MARIADB_DATABASE: ${db_name}
 
       adminer:
         image: adminer
         restart: always
         ports:
-          - 8081:8081
+          - 8081:8080
