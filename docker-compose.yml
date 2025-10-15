@@ -1,0 +1,20 @@
+    version: '3.8'
+    services:
+      linkedin-agent-app:
+        image: linkedin-agent-app:latest
+        environment:
+          unipile_dsn: ${unipile_dsn}
+          unipile_access_token: ${unipile_access_token}
+          port: 8080
+        ports:
+          - "8080:8080"
+        depends_on:
+          - ngrok
+          
+      ngrok:
+        image: ngrok/ngrok:alpine
+        environment:
+          NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+        command: "http linkedin-agent-app:8080 --url=furless-irrefrangibly-rashida.ngrok-free.dev"
+        ports:
+          - "4040:4040" # For ngrok's local web interface (optional)
