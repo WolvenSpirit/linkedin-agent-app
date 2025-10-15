@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Connect to LinkedIn Account</title>
+</head>
+<body>
+    <h2>LinkedIn checkpoint - please input OTP code for verification</h2>
+    {{if .Error}}
+    <p style="color: red;">{{.Error}}</p>
+    {{end}}
+    <form action="/checkpoint/otp" method="POST">
+        <label for="account_id">Account ID:</label><br>
+        <input type="text" id="account_id" name="account_id" value="{{ .AccountID }}"><br>
+        <label for="OTP Code">OTP Code:</label><br>
+        <input type="text" id="otp" name="otp"><br>
+        <input type="submit" value="Connect">
+    </form>
+</body>
+</html>

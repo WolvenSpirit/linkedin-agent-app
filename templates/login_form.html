@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Connect to LinkedIn Account</title>
+</head>
+<body>
+    <h2>Connect to LinkedIn Account</h2>
+    {{if .Error}}
+    <p style="color: red;">{{.Error}}</p>
+    {{end}}
+    <form action="/login/linkedin" method="POST">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username"><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+        <input type="submit" value="Connect">
+    </form>
+</body>
+</html>
