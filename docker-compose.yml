@@ -5,11 +5,13 @@
         environment:
           unipile_dsn: ${unipile_dsn}
           unipile_access_token: ${unipile_access_token}
+          db_host: db
           port: 8080
         ports:
           - "8080:8080"
         depends_on:
           - ngrok
+          - db
           
       ngrok:
         image: ngrok/ngrok:alpine
@@ -18,3 +20,16 @@
         command: "http linkedin-agent-app:8080 --url=furless-irrefrangibly-rashida.ngrok-free.dev"
         ports:
           - "4040:4040" # For ngrok's local web interface (optional)
+
+      db:
+        image: mariadb
+        restart: always
+        environment:
+          MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+          MARIADB_DATABASE: linkedin_agent_db
+
+      adminer:
+        image: adminer
+        restart: always
+        ports:
+          - 8081:8081
