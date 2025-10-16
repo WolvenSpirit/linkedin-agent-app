@@ -24,10 +24,19 @@ type CheckpointResponse struct {
 	} `json:"checkpoint"`
 }
 
+type WebhookResponse struct {
+	Message     string `json:"message"`
+	AccountID   string `json:"account_id"`
+	AccountType string `json:"account_type"`
+}
+
 const (
 	CheckpointStatusOTP             = "OTP"
 	CheckpointStatusInAPPValidation = "IN_APP_VALIDATION"
 	// More not implemented and handled currently
+	WebhookMessageOK         = "OK"
+	WebhookMessageConnecting = "CONNECTING"
+	WebhookSyncSuccess       = "SYNC_SUCCESS"
 )
 
 type CheckpointOTPPayload struct {

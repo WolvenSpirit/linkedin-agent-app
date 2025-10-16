@@ -36,3 +36,11 @@ func DBConnect() error {
 	}
 	return err
 }
+
+func InsertInitialAccountData(email string, accountId string) {
+	// Here status will default to NOT_CONNECTED
+}
+
+func UpdateAccountData(accountId string, status string) {
+	// To be called from webhook handler and update records with the status update that we receive
+}

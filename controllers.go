@@ -88,11 +88,19 @@ func webhookAccounts(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Error reading response body: %v", err)
 	}
-	result := make(map[string]interface{})
+	result := WebhookResponse{}
 	if err := json.Unmarshal(body, &result); err != nil {
 		log.Printf("Error unmarshaling response JSON: %v", err)
 	}
 	log.Printf("Received webhook: %+v", result)
+	if result.Message == WebhookMessageOK || result.Message == WebhookSyncSuccess {
+		// save to db as below
+		// query row by account_id
+		// update row with connection status as CONNECTED
+	}
+	if result.Message == WebhookMessageConnecting {
+		// update row with connection status as CONNECTING
+	}
 	w.WriteHeader(http.StatusOK)
 }
 
