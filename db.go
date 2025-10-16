@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -40,20 +41,22 @@ func DBConnect() error {
 func InsertInitialAccountData(email string, accountId string) {
 	// Here status will default to NOT_CONNECTED
 	if _, err := db.Exec("INSERT INTO accounts(email, account_id, status) VALUES (?, ?, ?)", email, accountId, "NOT_CONNECTED"); err != nil {
-		fmt.Print(err.Error())
+		log.Print(err.Error())
 	}
 }
 
 func UpdateAccountData(accountId string, status string) {
 	// To be called from webhook handler and update records with the status update that we receive
 	if _, err := db.Exec("UPDATE accounts SET status = ? where account_Id = ?", status, accountId); err != nil {
-		fmt.Print(err.Error())
+		log.Print(err.Error())
 	}
 }
 
 func SelectAccountData(email string) Account {
-	res := db.QueryRow("SELECT * FROM accounts where email = ?", email)
+	res := db.QueryRow("SELECT id, email, account_id, status FROM accounts where email = ?", email)
 	acc := Account{}
-	res.Scan(&acc.Id, &acc.Email, &acc.AccountId, &acc.Status)
+	if err := res.Scan(&acc.Id, &acc.Email, &acc.AccountId, &acc.Status); err != nil {
+		log.Print(err.Error())
+	}
 	return acc
 }

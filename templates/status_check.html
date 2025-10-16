@@ -5,10 +5,10 @@
 </head>
 <body>
     <h2>LinkedIn account linking status</h2>
-    <h4>
-        {{.AccountId}}</h4></br>
-        {{.Email}}</h4></br>
-        {{.Status}}</h4></br>
+    <h4>Account ID:  {{.AccountId}}</h4></br>
+      <h4>Email:  {{.Email}}</h4></br>
+      <h4>Account status:  [{{.Status}}]</h4>
+      <br>(If not "CONNECTED" then a webhook call following the checkpoint was not received or processed properly)</br>
     </h4>
 </body>
 </html>
