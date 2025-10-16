@@ -81,7 +81,13 @@ func loginLinkedin(w http.ResponseWriter, r *http.Request) {
 			log.Print(err.Error())
 		}
 	}
-	//w.WriteHeader(http.StatusOK)
+	if checkpoint.Checkpoint.Type == CheckpointStatusCAPTCHA {
+		templates := template.Must(template.ParseFiles("templates/captcha_not_implemented.html"))
+		data := make(map[string]interface{}, 1)
+		if err := templates.Execute(w, data); err != nil {
+			log.Print(err.Error())
+		}
+	}
 }
 
 func webhookAccounts(w http.ResponseWriter, r *http.Request) {
