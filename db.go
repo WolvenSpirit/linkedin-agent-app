@@ -50,3 +50,10 @@ func UpdateAccountData(accountId string, status string) {
 		fmt.Print(err.Error())
 	}
 }
+
+func SelectAccountData(email string) Account {
+	res := db.QueryRow("SELECT * FROM accounts where email = ?", email)
+	acc := Account{}
+	res.Scan(&acc.Id, &acc.Email, &acc.AccountId, &acc.Status)
+	return acc
+}

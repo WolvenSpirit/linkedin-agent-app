@@ -36,6 +36,7 @@ type WebhookResponse struct {
 const (
 	CheckpointStatusOTP             = "OTP"
 	CheckpointStatusInAPPValidation = "IN_APP_VALIDATION"
+	CheckpointStatusCAPTCHA         = "CAPTCHA"
 	// More not implemented and handled currently
 	WebhookMessageOK         = "OK"
 	WebhookMessageConnecting = "CONNECTING"
@@ -46,4 +47,11 @@ type CheckpointOTPPayload struct {
 	AccountID string `json:"account_id"`
 	Code      string `json:"code"`
 	Provider  string `json:"provider"`
+}
+
+type Account struct {
+	Id        int64
+	AccountId string
+	Email     string
+	Status    string
 }

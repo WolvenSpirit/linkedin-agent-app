@@ -15,6 +15,7 @@ func main() {
 	mux.HandleFunc("/webhook/accounts", webhookAccounts)
 	mux.HandleFunc("/checkpoint/otp", checkpointOTPHandler)
 	mux.HandleFunc("/", homeHandler)
+	mux.HandleFunc("/status/linkedin", checkStatus)
 	server := http.Server{
 		Addr:    fmt.Sprintf(":%s", os.Getenv("port")),
 		Handler: mux,

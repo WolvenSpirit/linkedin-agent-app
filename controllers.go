@@ -169,10 +169,22 @@ func checkpointOTPHandler(w http.ResponseWriter, r *http.Request) {
 	// Check for a successful response.
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
 		log.Printf("API request failed with status code %d and response: %s", resp.StatusCode, string(body))
+	} else {
+		// We should be fine already confirming status from here as well by updating the record
 	}
 
 	log.Printf("Response %s", string( // Create a new HTTP POST request.
 		body))
 	w.WriteHeader(http.StatusOK)
 
+}
+
+func checkStatus(w http.ResponseWriter, r *http.Request) {
+	email := r.FormValue("username")
+	data := SelectAccountData(email)
+	fmt.Printf("%+v", data)
+	templates := template.Must(template.ParseFiles("templates/status_check.html"))
+	if err := templates.Execute(w, data); err != nil {
+		log.Print(err.Error())
+	}
 }
