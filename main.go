@@ -19,6 +19,7 @@ func main() {
 		Addr:    fmt.Sprintf(":%s", os.Getenv("port")),
 		Handler: mux,
 	}
+
 	DBConnect()
 	MigrateUp()
 	defer db.Close()

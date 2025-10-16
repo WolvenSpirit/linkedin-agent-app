@@ -4,19 +4,35 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"time"
 
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-sql-driver/mysql"
 )
 
 var db *sql.DB
 
+const (
+	START_CONNECTION_AFTER_SECONDS = 15
+)
+
 func DBConnect() error {
 	var err error
-	sdn := fmt.Sprintf("%s:%s@tcp(%s)/%s?tls=false", os.Getenv("db_user"), os.Getenv("db_password"), os.Getenv("db_host"), os.Getenv("db_name"))
-	fmt.Println("Connecting to database with:", sdn)
-	db, err = sql.Open("mysql", sdn)
+
+	cfg := mysql.NewConfig()
+	cfg.User = os.Getenv("db_user")
+	cfg.Passwd = os.Getenv("db_password")
+	cfg.Net = "tcp"
+	cfg.Addr = os.Getenv("db_host")
+	cfg.DBName = os.Getenv("db_name")
+	time.Sleep(START_CONNECTION_AFTER_SECONDS * time.Second)
+	db, err = sql.Open("mysql", cfg.FormatDSN())
 	if err != nil {
 		panic(err)
+	}
+	if err := db.Ping(); err != nil {
+		fmt.Printf("Attempting to test connection encountered %s", err.Error())
+	} else {
+		fmt.Print("Connected to DB")
 	}
 	return err
 }

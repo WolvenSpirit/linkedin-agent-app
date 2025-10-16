@@ -15,6 +15,7 @@
         depends_on:
           - ngrok
           - db
+          - adminer
           
       ngrok:
         image: ngrok/ngrok:alpine
