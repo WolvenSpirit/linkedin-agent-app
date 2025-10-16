@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 )
 
@@ -17,7 +18,9 @@ func getMigration() Migration {
 	}
 
 	var migration Migration
-	err = json.Unmarshal(data, &migration)
+	if err = json.Unmarshal(data, &migration); err != nil {
+		fmt.Println(err.Error())
+	}
 	return migration
 }
 

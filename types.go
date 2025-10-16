@@ -24,10 +24,13 @@ type CheckpointResponse struct {
 	} `json:"checkpoint"`
 }
 
-type WebhookResponse struct {
+type AccountStatus struct {
 	Message     string `json:"message"`
 	AccountID   string `json:"account_id"`
 	AccountType string `json:"account_type"`
+}
+type WebhookResponse struct {
+	AccountStatus AccountStatus
 }
 
 const (

@@ -62,6 +62,7 @@ func loginLinkedin(w http.ResponseWriter, r *http.Request) {
 	if err := json.Unmarshal(body, &checkpoint); err != nil {
 		log.Printf("Error unmarshaling response JSON: %v", err)
 	}
+	InsertInitialAccountData(payload.Username, checkpoint.AccountID)
 	log.Printf("Response %s", checkpoint.Checkpoint.Type)
 	if checkpoint.Checkpoint.Type == CheckpointStatusOTP {
 		log.Printf("Checkpoint OTP required for account ID %s", checkpoint.AccountID)
@@ -92,14 +93,16 @@ func webhookAccounts(w http.ResponseWriter, r *http.Request) {
 	if err := json.Unmarshal(body, &result); err != nil {
 		log.Printf("Error unmarshaling response JSON: %v", err)
 	}
-	log.Printf("Received webhook: %+v", result)
-	if result.Message == WebhookMessageOK || result.Message == WebhookSyncSuccess {
+	log.Printf("Received webhook: %+v", string(body))
+	if result.AccountStatus.Message == WebhookMessageOK || result.AccountStatus.Message == WebhookSyncSuccess {
 		// save to db as below
 		// query row by account_id
 		// update row with connection status as CONNECTED
+		UpdateAccountData(result.AccountStatus.AccountID, "CONNECTED")
 	}
-	if result.Message == WebhookMessageConnecting {
+	if result.AccountStatus.Message == WebhookMessageConnecting {
 		// update row with connection status as CONNECTING
+		UpdateAccountData(result.AccountStatus.AccountID, "CONNECTING")
 	}
 	w.WriteHeader(http.StatusOK)
 }

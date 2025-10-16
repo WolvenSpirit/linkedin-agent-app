@@ -39,8 +39,14 @@ func DBConnect() error {
 
 func InsertInitialAccountData(email string, accountId string) {
 	// Here status will default to NOT_CONNECTED
+	if _, err := db.Exec("INSERT INTO accounts(email, account_id, status) VALUES (?, ?, ?)", email, accountId, "NOT_CONNECTED"); err != nil {
+		fmt.Print(err.Error())
+	}
 }
 
 func UpdateAccountData(accountId string, status string) {
 	// To be called from webhook handler and update records with the status update that we receive
+	if _, err := db.Exec("UPDATE accounts SET status = ? where account_Id = ?", status, accountId); err != nil {
+		fmt.Print(err.Error())
+	}
 }
