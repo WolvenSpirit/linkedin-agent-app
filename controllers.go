@@ -8,10 +8,12 @@ import (
 	"io"
 	"log"
 	"net/http"
+
+	unipile "github.com/wolvenspirit/linkedin-agent-app/client/unipile"
 )
 
 func loginLinkedin(w http.ResponseWriter, r *http.Request) {
-	unipileConfig := GetUnipileConfig()
+	unipileConfig := unipile.GetUnipileConfig()
 
 	// Create the request payload.
 	payload := ConnectAccountPayload{
@@ -25,26 +27,7 @@ func loginLinkedin(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Error marshaling JSON: %v", err)
 	}
-
-	// Create a new HTTP POST request.
-	url := fmt.Sprintf("https://%s/api/v1/accounts", unipileConfig.UnipileDsn)
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonPayload))
-	if err != nil {
-		log.Printf("Error creating request: %v", err)
-	}
-
-	// Set the required headers.
-	req.Header.Set("X-API-KEY", unipileConfig.AccessToken)
-	req.Header.Set("Content-Type", "application/json")
-
-	// Send the request.
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Printf("Error sending request: %v", err)
-	}
-	defer resp.Body.Close()
-
+	resp := unipile.Client.ConnectUnipileAccount(jsonPayload, unipileConfig)
 	// Read and print the response body.
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -126,7 +109,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 
 func checkpointOTPHandler(w http.ResponseWriter, r *http.Request) {
 
-	unipileConfig := GetUnipileConfig()
+	unipileConfig := unipile.GetUnipileConfig()
 
 	// Create the request payload.
 	payload := CheckpointOTPPayload{

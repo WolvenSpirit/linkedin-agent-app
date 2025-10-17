@@ -1,0 +1,5 @@
+{
+    "GetAccountByEmail": "SELECT id, email, account_id, status FROM accounts where email = ?",
+    "InsertAccount": "INSERT INTO accounts(email, account_id, status) VALUES (?, ?, ?)",
+    "UpdateAccountState": "UPDATE accounts SET status = ? where account_Id = ?"
+}

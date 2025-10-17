@@ -14,14 +14,16 @@ type AccountResponse struct {
 	// Add other fields from the API response as needed.
 }
 
+type Checkpoint struct {
+	Type      string `json:"type"`
+	Data      string `json:"data"`
+	PublicKey string `json:"public_key"`
+}
+
 type CheckpointResponse struct {
-	AccountID  string `json:"account_id"`
-	Object     string `json:"object"`
-	Checkpoint struct {
-		Type      string `json:"type"`
-		Data      string `json:"data"`
-		PublicKey string `json:"public_key"`
-	} `json:"checkpoint"`
+	AccountID  string     `json:"account_id"`
+	Object     string     `json:"object"`
+	Checkpoint Checkpoint `json:"checkpoint"`
 }
 
 type AccountStatus struct {

@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+
+	models "github.com/wolvenspirit/linkedin-agent-app/models"
 )
 
 func main() {
@@ -23,6 +25,7 @@ func main() {
 
 	DBConnect()
 	MigrateUp()
+	models.Load()
 	defer db.Close()
 	// Start the server in a separate goroutine.
 	go func() {
