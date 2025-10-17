@@ -37,6 +37,12 @@ func loginLinkedin(w http.ResponseWriter, r *http.Request) {
 	// Check for a successful response.
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
 		log.Printf("API request failed with status code %d and response: %s", resp.StatusCode, string(body))
+		templates := template.Must(template.ParseFiles("templates/invalid_credentials.html"))
+		data := make(map[string]interface{}, 1)
+		if err := templates.Execute(w, data); err != nil {
+			log.Print(err.Error())
+		}
+		return
 	}
 
 	// Unmarshal the JSON response into our struct.
@@ -170,4 +176,41 @@ func checkStatus(w http.ResponseWriter, r *http.Request) {
 	if err := templates.Execute(w, data); err != nil {
 		log.Print(err.Error())
 	}
+}
+
+func cookieLinkedInLogin(w http.ResponseWriter, r *http.Request) {
+	token := r.FormValue("li_at_access_token")
+	email := r.FormValue("username")
+	unipileConfig := unipile.GetUnipileConfig()
+	provider := unipileConfig.Provider
+
+	payload := CookieAuthRequest{Provider: provider, AccessToken: token, UserAgent: r.UserAgent()}
+	b, e := json.Marshal(payload)
+	if e != nil {
+		log.Println(e.Error())
+	}
+	resp := unipile.Client.ConnectUnipileAccount(b, unipileConfig)
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println(e.Error())
+	}
+	// Check for a successful response.
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
+		log.Printf("API request failed with status code %d and response: %s\n", resp.StatusCode, string(body))
+		templates := template.Must(template.ParseFiles("templates/invalid_credentials.html"))
+		data := make(map[string]interface{}, 1)
+		if err := templates.Execute(w, data); err != nil {
+			log.Print(err.Error())
+		}
+		return
+	}
+	// Unmarshal the JSON response into our struct.
+	//var accountResponse AccountResponse
+	response := AccountCreatedResponse{}
+	if err := json.Unmarshal(body, &response); err != nil {
+		log.Printf("Error unmarshaling response JSON: %v", err)
+	}
+	InsertInitialAccountData(email, response.AccountID)
+	log.Printf("Response %s", string(body))
+	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }

@@ -18,6 +18,7 @@ func main() {
 	mux.HandleFunc("/checkpoint/otp", checkpointOTPHandler)
 	mux.HandleFunc("/", homeHandler)
 	mux.HandleFunc("/status/linkedin", checkStatus)
+	mux.HandleFunc("/cookie/linkedin", cookieLinkedInLogin)
 	server := http.Server{
 		Addr:    fmt.Sprintf(":%s", os.Getenv("port")),
 		Handler: mux,

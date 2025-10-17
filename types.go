@@ -57,3 +57,14 @@ type Account struct {
 	Email     string
 	Status    string
 }
+
+type CookieAuthRequest struct {
+	Provider    string `json:"provider"`
+	AccessToken string `json:"access_token"`
+	UserAgent   string `json:"user_agent"`
+}
+
+type AccountCreatedResponse struct {
+	AccountID string `json:"account_id"`
+	Object    string `json:"object"`
+}

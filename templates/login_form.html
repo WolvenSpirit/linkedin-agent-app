@@ -2,12 +2,15 @@
 <html>
 <head>
     <title>Connect to LinkedIn Account</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
+    <div class="container">
     <h2>Connect to LinkedIn Account</h2>
     {{if .Error}}
     <p style="color: red;">{{.Error}}</p>
     {{end}}
+    <h3>Using email and password</h3>
     <form action="/login/linkedin" method="POST">
         <label for="username">Email:</label><br>
         <input type="text" id="username" name="username"><br>
@@ -15,11 +18,22 @@
         <input type="password" id="password" name="password"><br><br>
         <input type="submit" value="Connect">
     </form>
+    <hr>
+    <h3>Using email and li_at cookie access token</h3>
+    <form action="/cookie/linkedin" method="POST">
+        <label for="username">Email:</label><br>
+        <input type="text" id="username" name="username"><br>
+        <label for="li_at_access_token">LinkedIn Cookie Token (li_at):</label><br>
+        <input type="li_at_access_token" id="li_at_access_token" name="li_at_access_token"><br><br>
+        <input type="submit" value="Connect">
+    </form>
+    <hr>
         <h2>Check link status of LinkedIn Account</h2>
     <form action="/status/linkedin" method="POST">
         <label for="username">Email:</label><br>
         <input type="text" id="username" name="username"><br>
         <input type="submit" value="Check">
     </form>
+    </div>
 </body>
 </html>

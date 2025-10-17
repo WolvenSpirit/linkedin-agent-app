@@ -73,3 +73,81 @@ func Test_loginLinkedin(t *testing.T) {
 
 	}
 }
+
+func Test_webhookAccountsOK(t *testing.T) {
+	w := httptest.NewRecorder()
+	response := WebhookResponse{AccountStatus: AccountStatus{Message: WebhookMessageOK}}
+	b, _ := json.Marshal(response)
+	payload := bytes.NewBuffer(b)
+	models.Load()
+	r := httptest.NewRequest(http.MethodPost, "/webhook/accounts", payload)
+	tests := []struct {
+		name string // description of this test case
+		// Named input parameters for target function.
+		w http.ResponseWriter
+		r *http.Request
+	}{
+		{w: w, r: r, name: "webhook checkpoint cleared"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+			mockdb, mock, _ := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
+			mock.ExpectExec(models.AccountModel.UpdateAccountState)
+			db = mockdb
+
+			webhookAccounts(tt.w, tt.r)
+		})
+	}
+}
+
+func Test_webhookAccountsConnecting(t *testing.T) {
+	w := httptest.NewRecorder()
+	response := WebhookResponse{AccountStatus: AccountStatus{Message: WebhookMessageConnecting}}
+	b, _ := json.Marshal(response)
+	payload := bytes.NewBuffer(b)
+	models.Load()
+	r := httptest.NewRequest(http.MethodPost, "/webhook/accounts", payload)
+	tests := []struct {
+		name string // description of this test case
+		// Named input parameters for target function.
+		w http.ResponseWriter
+		r *http.Request
+	}{
+		{w: w, r: r, name: "webhook account connecting"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+			mockdb, mock, _ := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
+			mock.ExpectExec(models.AccountModel.UpdateAccountState)
+			db = mockdb
+
+			webhookAccounts(tt.w, tt.r)
+		})
+	}
+}
+
+func Test_checkStatus(t *testing.T) {
+	w := httptest.NewRecorder()
+	formData := url.Values{}
+	formData.Set("username", "testuser@null.dev")
+	r := httptest.NewRequest(http.MethodPost, "/login/linkedin", bytes.NewBufferString(formData.Encode()))
+	models.Load()
+	tests := []struct {
+		name string // description of this test case
+		// Named input parameters for target function.
+		w http.ResponseWriter
+		r *http.Request
+	}{
+		{w: w, r: r, name: "account status check"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			mockdb, mock, _ := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
+			mock.ExpectExec(models.AccountModel.GetAccountByEmail)
+			db = mockdb
+			checkStatus(tt.w, tt.r)
+		})
+	}
+}
